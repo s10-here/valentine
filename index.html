@@ -2,6 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Will you be my Valentine?</title>
 
 <style>
@@ -52,16 +54,19 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,0.1);
   position:relative;
   z-index:2;
+  max-width:90%;
 }
 
 h2{
   margin-bottom:30px;
 }
 
+/* Buttons container */
 .buttons{
   display:flex;
   justify-content:center;
   gap:20px;
+  position:relative;
 }
 
 /* Buttons */
@@ -80,7 +85,6 @@ button{
 
 #noBtn{
   background:#eee;
-  position:absolute;
 }
 
 /* Floating hearts */
@@ -101,7 +105,7 @@ button{
 
 <body>
 
-<!-- Blur background -->
+<!-- Blur Background -->
 <div class="bgBlur"></div>
 
 <div class="card">
@@ -119,20 +123,28 @@ button{
 
 <script>
 const noBtn = document.getElementById("noBtn");
+const card = document.querySelector(".card");
 
-/* Move NO button safely */
+/* Move NO button smoothly near card */
 function moveNo(){
-  const maxX = window.innerWidth - 100;
-  const maxY = window.innerHeight - 60;
+  const rect = card.getBoundingClientRect();
+  const padding = 40;
 
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
+  const minX = rect.left - padding;
+  const maxX = rect.right + padding - noBtn.offsetWidth;
+  const minY = rect.top - padding;
+  const maxY = rect.bottom + padding - noBtn.offsetHeight;
 
+  const x = Math.random() * (maxX - minX) + minX;
+  const y = Math.random() * (maxY - minY) + minY;
+
+  noBtn.style.position = "fixed";
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
+  noBtn.style.transition = "0.3s";
 }
 
-noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("mouseenter", moveNo);
 noBtn.addEventListener("touchstart", moveNo);
 
 /* YES button */
@@ -140,7 +152,7 @@ function yesClicked(){
   window.location.href = "love.html";
 }
 
-/* Start music after click */
+/* Start music after first click */
 window.addEventListener("click", () => {
   document.getElementById("bgMusic").play().catch(()=>{});
 }, { once: true });
