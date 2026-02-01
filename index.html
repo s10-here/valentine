@@ -13,6 +13,7 @@ body{
   align-items:center;
   background:#ffd6e0;
   font-family:Arial, sans-serif;
+  overflow:hidden;
 }
 
 .card{
@@ -23,9 +24,7 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,0.1);
 }
 
-h2{
-  margin-bottom:30px;
-}
+h2{ margin-bottom:30px; }
 
 button{
   padding:12px 25px;
@@ -44,6 +43,19 @@ button{
 #noBtn{
   background:#eee;
   position:absolute;
+}
+
+/* Floating hearts */
+.heart {
+  position: fixed;
+  bottom: -10px;
+  font-size: 20px;
+  animation: floatUp 5s linear infinite;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100vh); opacity: 0; }
 }
 </style>
 </head>
@@ -68,17 +80,33 @@ noBtn.addEventListener("mouseover", () => {
 });
 
 function yesClicked(){
-  alert("Yay! ❤️");
+  window.location.href = "love.html";
 }
 </script>
+
 <audio id="bgMusic" autoplay loop>
-  <source <source src="music.mp3" type="audio/mpeg">
+  <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 window.addEventListener("click", () => {
   document.getElementById("bgMusic").play();
 });
+
+/* Floating hearts */
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = (3 + Math.random() * 2) + "s";
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 5000);
+}
+
+setInterval(createHeart, 300);
 </script>
+
 </body>
 </html>
