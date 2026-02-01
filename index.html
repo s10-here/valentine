@@ -57,11 +57,8 @@ body{
   max-width:90%;
 }
 
-h2{
-  margin-bottom:30px;
-}
+h2{ margin-bottom:30px; }
 
-/* Buttons container */
 .buttons{
   display:flex;
   justify-content:center;
@@ -69,7 +66,6 @@ h2{
   position:relative;
 }
 
-/* Buttons */
 button{
   padding:12px 25px;
   font-size:18px;
@@ -105,7 +101,6 @@ button{
 
 <body>
 
-<!-- Blur Background -->
 <div class="bgBlur"></div>
 
 <div class="card">
@@ -124,8 +119,9 @@ button{
 <script>
 const noBtn = document.getElementById("noBtn");
 const card = document.querySelector(".card");
+const music = document.getElementById("bgMusic");
 
-/* Move NO button smoothly near card */
+/* Move NO button */
 function moveNo(){
   const rect = card.getBoundingClientRect();
   const padding = 40;
@@ -149,20 +145,48 @@ noBtn.addEventListener("touchstart", moveNo);
 
 /* YES button */
 function yesClicked(){
-  window.location.href = "love.html";
+  fadeOut(() => {
+    window.location.href = "love.html";
+  });
 }
 
-/* Start music after first click */
-window.addEventListener("click", () => {
-  document.getElementById("bgMusic").play().catch(()=>{});
-}, { once: true });
+/* Music fade in */
+function fadeIn(){
+  music.volume = 0;
+  music.play().catch(()=>{});
+  let v = 0;
+  const fade = setInterval(()=>{
+    if(v < 1){
+      v += 0.05;
+      music.volume = v;
+    } else clearInterval(fade);
+  },100);
+}
+
+/* Music fade out */
+function fadeOut(callback){
+  let v = music.volume;
+  const fade = setInterval(()=>{
+    if(v > 0){
+      v -= 0.05;
+      music.volume = v;
+    } else {
+      clearInterval(fade);
+      music.pause();
+      callback && callback();
+    }
+  },100);
+}
+
+/* Start music on first tap */
+window.addEventListener("click", fadeIn, { once:true });
 
 /* Floating hearts */
-function createHeart() {
+function createHeart(){
   const heart = document.createElement("div");
   heart.className = "heart";
   heart.innerHTML = "❤️";
-  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.left = Math.random()*100 + "vw";
   heart.style.fontSize = (15 + Math.random()*20) + "px";
   heart.style.animationDuration = (4 + Math.random()*2) + "s";
 
