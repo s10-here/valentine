@@ -20,7 +20,7 @@ body{
   overflow:hidden;
 }
 
-/* Colorful blur background */
+/* Blue blur background */
 .bgBlur{
   position:fixed;
   width:200%;
@@ -32,14 +32,14 @@ body{
   animation: colorShift 15s linear infinite;
   background: linear-gradient(
     45deg,
-    #ff4d6d,
-    #ff758c,
-    #ff9a9e,
-    #fad0c4,
-    #fbc2eb,
-    #a18cd1,
-    #ffdde1,
-    #ff4d6d
+    #0f2027,
+    #203a43,
+    #2c5364,
+    #4facfe,
+    #00f2fe,
+    #1e3c72,
+    #2a5298,
+    #0f2027
   );
   background-size: 600% 600%;
 }
@@ -53,7 +53,7 @@ body{
 /* Card */
 .card{
   background:white;
-  padding:40px;
+  padding:30px;
   border-radius:18px;
   text-align:center;
   box-shadow:0 10px 30px rgba(0,0,0,0.15);
@@ -63,9 +63,17 @@ body{
 }
 
 h2{
-  margin-bottom:30px;
+  margin-bottom:25px;
   font-family:'Dancing Script', cursive;
-  font-size:34px;
+  font-size:32px;
+}
+
+/* GIF */
+.topGif{
+  width:220px;
+  max-width:80%;
+  height:auto;
+  margin-bottom:15px;
 }
 
 /* Buttons */
@@ -113,22 +121,31 @@ button{
 <div class="bgBlur"></div>
 
 <div class="card">
+
+  <!-- GIF on top -->
+  <img src="love.gif" class="topGif">
+
   <h2>Lux, will you be my Valentine? ❤️</h2>
 
   <div class="buttons">
     <button id="yesBtn" onclick="yesClicked()">Yes</button>
     <button id="noBtn">No</button>
   </div>
+
 </div>
 
 <!-- Music -->
-<audio id="bgMusic" loop autoplay muted playsinline>
+<audio id="bgMusic" loop playsinline>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 const noBtn = document.getElementById("noBtn");
 const music = document.getElementById("bgMusic");
+
+/* Try autoplay silently */
+music.volume = 0;
+music.play().catch(()=>{});
 
 /* Move NO button */
 function moveNo(){
@@ -157,8 +174,7 @@ function yesClicked(){
 
 /* Fade in sound */
 function fadeIn(){
-  music.muted = false;
-  music.volume = 0;
+  music.play().catch(()=>{});
 
   let v = 0;
   const fade = setInterval(()=>{
