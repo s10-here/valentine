@@ -6,6 +6,9 @@
 
 <title>Will you be my Valentine?</title>
 
+<!-- Romantic Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
 <style>
 body{
   margin:0;
@@ -13,12 +16,11 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background:#ffd6e0;
-  font-family:Arial, sans-serif;
+  font-family:'Poppins', sans-serif;
   overflow:hidden;
 }
 
-/* Color-changing blur background */
+/* Colorful blur background */
 .bgBlur{
   position:fixed;
   width:200%;
@@ -27,16 +29,19 @@ body{
   left:-50%;
   z-index:0;
   filter: blur(120px);
-  animation: colorShift 12s linear infinite;
+  animation: colorShift 15s linear infinite;
   background: linear-gradient(
     45deg,
     #ff4d6d,
+    #ff758c,
     #ff9a9e,
     #fad0c4,
+    #fbc2eb,
+    #a18cd1,
     #ffdde1,
     #ff4d6d
   );
-  background-size: 400% 400%;
+  background-size: 600% 600%;
 }
 
 @keyframes colorShift{
@@ -49,25 +54,29 @@ body{
 .card{
   background:white;
   padding:40px;
-  border-radius:15px;
+  border-radius:18px;
   text-align:center;
-  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+  box-shadow:0 10px 30px rgba(0,0,0,0.15);
   position:relative;
   z-index:2;
   max-width:90%;
 }
 
-h2{ margin-bottom:30px; }
+h2{
+  margin-bottom:30px;
+  font-family:'Dancing Script', cursive;
+  font-size:34px;
+}
 
+/* Buttons */
 .buttons{
   display:flex;
   justify-content:center;
   gap:20px;
-  position:relative;
 }
 
 button{
-  padding:12px 25px;
+  padding:12px 28px;
   font-size:18px;
   border:none;
   border-radius:25px;
@@ -104,7 +113,7 @@ button{
 <div class="bgBlur"></div>
 
 <div class="card">
-  <h2>Nirali, will you be my Valentine? ❤️</h2>
+  <h2>Lux, will you be my Valentine? ❤️</h2>
 
   <div class="buttons">
     <button id="yesBtn" onclick="yesClicked()">Yes</button>
@@ -112,32 +121,28 @@ button{
   </div>
 </div>
 
-<audio id="bgMusic" loop>
+<!-- Music -->
+<audio id="bgMusic" loop autoplay muted playsinline>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 const noBtn = document.getElementById("noBtn");
-const card = document.querySelector(".card");
 const music = document.getElementById("bgMusic");
 
 /* Move NO button */
 function moveNo(){
-  const rect = card.getBoundingClientRect();
-  const padding = 40;
+  const padding = 20;
 
-  const minX = rect.left - padding;
-  const maxX = rect.right + padding - noBtn.offsetWidth;
-  const minY = rect.top - padding;
-  const maxY = rect.bottom + padding - noBtn.offsetHeight;
+  const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+  const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-  const x = Math.random() * (maxX - minX) + minX;
-  const y = Math.random() * (maxY - minY) + minY;
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
 
   noBtn.style.position = "fixed";
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
-  noBtn.style.transition = "0.3s";
 }
 
 noBtn.addEventListener("mouseenter", moveNo);
@@ -150,10 +155,11 @@ function yesClicked(){
   });
 }
 
-/* Music fade in */
+/* Fade in sound */
 function fadeIn(){
+  music.muted = false;
   music.volume = 0;
-  music.play().catch(()=>{});
+
   let v = 0;
   const fade = setInterval(()=>{
     if(v < 1){
@@ -163,9 +169,13 @@ function fadeIn(){
   },100);
 }
 
-/* Music fade out */
+window.addEventListener("click", fadeIn, { once:true });
+window.addEventListener("touchstart", fadeIn, { once:true });
+
+/* Fade out music */
 function fadeOut(callback){
   let v = music.volume;
+
   const fade = setInterval(()=>{
     if(v > 0){
       v -= 0.05;
@@ -173,13 +183,10 @@ function fadeOut(callback){
     } else {
       clearInterval(fade);
       music.pause();
-      callback && callback();
+      if(callback) callback();
     }
   },100);
 }
-
-/* Start music on first tap */
-window.addEventListener("click", fadeIn, { once:true });
 
 /* Floating hearts */
 function createHeart(){
