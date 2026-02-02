@@ -6,37 +6,40 @@
 <title>Will you be my Valentine?</title>
 
 <!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Love+Light&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
 body{
   margin:0;
-  height:100vh;
+  min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
   font-family:'Poppins', sans-serif;
-  background:white; /* White main background */
+  background:linear-gradient(135deg,#ff9acb,#ff6fa5);
   overflow:hidden;
+  padding:12px;
 }
 
-/* Purple + Blue animated background */
+/* Animated blur background */
 .bgBlur{
   position:fixed;
   width:200%;
   height:200%;
   top:-50%;
   left:-50%;
-  filter: blur(120px);
+  filter:blur(160px);
+  opacity:0.7;
   z-index:0;
-  animation: colorShift 18s linear infinite;
-  background: linear-gradient(
+  animation:colorShift 22s linear infinite;
+
+  background:linear-gradient(
     45deg,
+    #ff6ec4,
+    #ff9acb,
     #8e2de2,
-    #4a00e0,
-    #667eea,
-    #6a11cb,
-    #8e2de2
+    #4facfe,
+    #ff6ec4
   );
   background-size:600% 600%;
 }
@@ -47,46 +50,48 @@ body{
   100%{background-position:0% 50%;}
 }
 
-/* Glass blur card */
+/* Card */
 .card{
-  background: rgba(255,255,255,0.55);
-  backdrop-filter: blur(15px);
-  padding:30px 35px;
+  background:white;
+  padding:22px;
   border-radius:18px;
   text-align:center;
-  box-shadow:0 10px 40px rgba(0,0,0,0.15);
+  box-shadow:0 10px 40px rgba(0,0,0,0.18);
   z-index:2;
-  max-width:95%;
+  width:92%;
+  max-width:380px;
 }
 
 /* Video */
 .topVideo{
-  width:220px;
-  max-width:90%;
-  margin-bottom:10px;
+  width:100%;
+  max-width:240px;
   border-radius:12px;
+  margin-bottom:10px;
 }
 
 /* Title */
 h2{
-  font-family:'Love Light', cursive;
-  font-size:40px;
-  margin:10px 0 25px;
+  font-family:'Pacifico', cursive;
+  font-size:clamp(28px,7vw,42px);
+  margin:10px 0 20px;
 }
 
 /* Buttons */
 .buttons{
   display:flex;
   justify-content:center;
-  gap:20px;
+  gap:12px;
 }
 
 button{
-  padding:12px 28px;
-  font-size:18px;
+  padding:12px 24px;
+  font-size:16px;
   border:none;
   border-radius:25px;
   cursor:pointer;
+  min-width:100px;
+  transition:.25s;
 }
 
 #yesBtn{
@@ -102,7 +107,6 @@ button{
 .heart{
   position:fixed;
   bottom:-20px;
-  font-size:20px;
   animation:floatUp linear forwards;
   z-index:1;
 }
@@ -133,39 +137,47 @@ button{
 
 </div>
 
-<!-- Music -->
-<audio id="bgMusic" loop autoplay muted playsinline>
+<audio id="bgMusic" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 const noBtn = document.getElementById("noBtn");
 const music = document.getElementById("bgMusic");
+let yesScaled = false;
 
-/* Move NO button */
+/* Smooth dodge */
 function moveNo(){
-  const maxX = window.innerWidth - noBtn.offsetWidth;
-  const maxY = window.innerHeight - noBtn.offsetHeight;
+  const moveX = (Math.random() - 0.5) * 140;
+  const moveY = (Math.random() - 0.5) * 100;
 
-  noBtn.style.position="fixed";
-  noBtn.style.left=Math.random()*maxX+"px";
-  noBtn.style.top=Math.random()*maxY+"px";
+  noBtn.style.position="relative";
+  noBtn.style.transform=`translate(${moveX}px,${moveY}px)`;
 }
+
+noBtn.addEventListener("click", () => {
+  moveNo();
+
+  if(!yesScaled){
+    document.getElementById("yesBtn")
+      .style.transform="scale(1.8)";
+    yesScaled=true;
+  }
+});
 
 noBtn.addEventListener("mouseenter", moveNo);
 noBtn.addEventListener("touchstart", moveNo);
 
-/* YES button */
+/* YES action */
 function yesClicked(){
   window.location.href="love.html";
 }
 
-/* Try enabling music */
-setTimeout(()=>{
-  music.muted=false;
-  music.volume=1;
+/* Music start after first tap */
+document.body.addEventListener("click", () => {
+  music.volume = 1;
   music.play().catch(()=>{});
-},1000);
+},{once:true});
 
 /* Floating hearts */
 function createHeart(){
@@ -180,7 +192,7 @@ function createHeart(){
   setTimeout(()=>heart.remove(),6000);
 }
 
-setInterval(createHeart,400);
+setInterval(createHeart,500);
 </script>
 
 </body>
