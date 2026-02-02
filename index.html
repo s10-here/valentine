@@ -3,10 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Will you be my Valentine?</title>
 
-<!-- Romantic Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 
 <style>
@@ -27,55 +25,51 @@ body{
   height:200%;
   top:-50%;
   left:-50%;
-  z-index:0;
   filter: blur(120px);
-  animation: colorShift 15s linear infinite;
+  z-index:0;
+  animation: colorShift 18s linear infinite;
   background: linear-gradient(
     45deg,
     #4facfe,
-    #6a11cb,
-    #8e2de2,
-    #c471f5,
-    #4facfe,
-    #6a11cb
+    #6a82fb,
+    #a18cd1,
+    #667eea,
+    #89f7fe,
+    #4facfe
   );
-  background-size: 600% 600%;
+  background-size:600% 600%;
 }
 
 @keyframes colorShift{
-  0%{ background-position:0% 50%; }
-  50%{ background-position:100% 50%; }
-  100%{ background-position:0% 50%; }
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
 }
 
 /* Card */
 .card{
   background:white;
-  padding:35px;
+  padding:40px;
   border-radius:18px;
   text-align:center;
-  box-shadow:0 10px 30px rgba(0,0,0,0.15);
-  position:relative;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
   z-index:2;
   max-width:90%;
 }
 
-/* GIF style */
-.topGif{
-  width:220px;
+.topVideo{
+  width:260px;
   max-width:80%;
-  height:auto;
   margin-bottom:15px;
+  border-radius:12px;
 }
 
-/* Heading */
 h2{
-  margin-bottom:30px;
   font-family:'Dancing Script', cursive;
-  font-size:34px;
+  font-size:32px;
+  margin-bottom:20px;
 }
 
-/* Buttons */
 .buttons{
   display:flex;
   justify-content:center;
@@ -83,7 +77,7 @@ h2{
 }
 
 button{
-  padding:12px 28px;
+  padding:12px 26px;
   font-size:18px;
   border:none;
   border-radius:25px;
@@ -100,17 +94,16 @@ button{
 }
 
 /* Floating hearts */
-.heart {
-  position: fixed;
-  bottom: -20px;
-  font-size: 20px;
+.heart{
+  position:fixed;
+  bottom:-20px;
   animation: floatUp linear forwards;
   z-index:1;
 }
 
-@keyframes floatUp {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-110vh); opacity: 0; }
+@keyframes floatUp{
+  from{transform:translateY(0);opacity:1;}
+  to{transform:translateY(-110vh);opacity:0;}
 }
 </style>
 </head>
@@ -121,8 +114,10 @@ button{
 
 <div class="card">
 
-  <!-- Replace love.gif with your GIF name -->
-  <img src="love.gif" class="topGif">
+  <!-- Looping video -->
+  <video autoplay loop muted playsinline class="topVideo">
+    <source src="love.mp4" type="video/mp4">
+  </video>
 
   <h2>Lux, will you be my Valentine? ❤️</h2>
 
@@ -134,7 +129,7 @@ button{
 </div>
 
 <!-- Music -->
-<audio id="bgMusic" loop autoplay muted playsinline>
+<audio id="bgMusic" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -144,17 +139,12 @@ const music = document.getElementById("bgMusic");
 
 /* Move NO button */
 function moveNo(){
-  const padding = 20;
+  const maxX = window.innerWidth - noBtn.offsetWidth;
+  const maxY = window.innerHeight - noBtn.offsetHeight;
 
-  const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-  const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
-
-  noBtn.style.position = "fixed";
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
+  noBtn.style.position="fixed";
+  noBtn.style.left=Math.random()*maxX+"px";
+  noBtn.style.top=Math.random()*maxY+"px";
 }
 
 noBtn.addEventListener("mouseenter", moveNo);
@@ -162,58 +152,47 @@ noBtn.addEventListener("touchstart", moveNo);
 
 /* YES button */
 function yesClicked(){
-  fadeOut(() => {
-    window.location.href = "love.html";
-  });
+  fadeOut(()=> window.location.href="love.html");
 }
 
-/* Fade in music */
-function fadeIn(){
-  music.muted = false;
-  music.volume = 0;
+/* Try autoplay */
+music.volume = 0.5;
+music.play().catch(()=>{});
 
-  let v = 0;
-  const fade = setInterval(()=>{
-    if(v < 1){
-      v += 0.05;
-      music.volume = v;
-    } else clearInterval(fade);
-  },100);
+/* Start music after first interaction */
+function startMusic(){
+  music.play().catch(()=>{});
 }
-
-window.addEventListener("click", fadeIn, { once:true });
-window.addEventListener("touchstart", fadeIn, { once:true });
+window.addEventListener("click", startMusic, {once:true});
+window.addEventListener("touchstart", startMusic, {once:true});
 
 /* Fade out music */
 function fadeOut(callback){
   let v = music.volume;
-
   const fade = setInterval(()=>{
-    if(v > 0){
+    if(v>0){
       v -= 0.05;
       music.volume = v;
     } else {
       clearInterval(fade);
       music.pause();
-      if(callback) callback();
+      callback && callback();
     }
   },100);
 }
 
 /* Floating hearts */
 function createHeart(){
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerHTML = "❤️";
-  heart.style.left = Math.random()*100 + "vw";
-  heart.style.fontSize = (15 + Math.random()*20) + "px";
-  heart.style.animationDuration = (4 + Math.random()*2) + "s";
-
+  const heart=document.createElement("div");
+  heart.className="heart";
+  heart.innerHTML="❤️";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.fontSize=(16+Math.random()*18)+"px";
+  heart.style.animationDuration=(4+Math.random()*2)+"s";
   document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 6000);
+  setTimeout(()=>heart.remove(),6000);
 }
-
-setInterval(createHeart, 400);
+setInterval(createHeart,400);
 </script>
 
 </body>
